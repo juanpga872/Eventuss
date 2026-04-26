@@ -36,7 +36,7 @@ public class InscripcionService {
                 .existsByUsuario_IdUsuarioAndEvento_IdEvento(idUsuario, idEvento);
 
         if (yaExiste) {
-            throw new RuntimeException("El usuario ya está inscrito en este evento");
+            throw new IllegalArgumentException("El usuario ya está inscrito en este evento");
         }
 
         return inscripcionRepository.save(inscripcion);

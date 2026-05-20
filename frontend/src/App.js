@@ -16,14 +16,22 @@ function ProtectedRoute({ children, requiredRole }) {
   return children;
 }
 
+function PublicRoute({ children }) {
+  const { auth } = useAuth();
+  if (auth.token) {
+    return <Navigate to={auth.role === 'ADMIN' ? '/admin/eventos' : '/eventos'} />;
+  }
+  return children;
+}
+
 function AppRoutes() {
   const { auth } = useAuth();
   return (
     <>
       {auth.token && <Navbar />}
       <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+        <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
         <Route path="/eventos" element={<ProtectedRoute><EventosPage /></ProtectedRoute>} />
         <Route path="/admin/eventos" element={<ProtectedRoute requiredRole="ADMIN"><AdminEventos /></ProtectedRoute>} />
         <Route path="/admin/categorias" element={<ProtectedRoute requiredRole="ADMIN"><AdminCategorias /></ProtectedRoute>} />
